@@ -25,6 +25,8 @@
 
             Console.WriteLine($"Monitoring folder: {folderToWatch}. Press 'q' to quit.");
 
+            TCPFileClient.ReadHeartBeat();
+
             // Keep the console app running until the user quits
             while (Console.Read() != 'q') ;
         }
@@ -33,7 +35,6 @@
         private static void OnNewFileAdded(object sender, FileSystemEventArgs e)
         {
             Thread.Sleep(100);
-            Console.WriteLine($"New file detected: {e.FullPath}");
 
             // Trigger your console application here
             TCPFileClient.SendFile(e.FullPath);
