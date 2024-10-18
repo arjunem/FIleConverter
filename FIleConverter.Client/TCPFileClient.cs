@@ -93,7 +93,7 @@ namespace FileConverter.Client
                 try
                 {
                     // Start reading from the stream
-                    bytesRead = ReadWithTimeout(stream, buffer, 10000); // 10 seconds timeout
+                    bytesRead = ReadWithTimeout(stream, buffer, 25000); // 25 seconds timeout
 
                     // Read data from the server
                     bytesRead = stream.Read(buffer, 0, buffer.Length);

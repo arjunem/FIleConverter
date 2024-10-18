@@ -9,8 +9,6 @@ namespace FileConverter.Server
         private const int port = 1235; // Port to listen on
         private const string saveFilePath = "/home/amukundane/Documents/received_file.txt"; // Update to your desired path
         private static bool keepRunning = true;
-        private static int heartbeatInterval = 5000; // Heartbeat interval in milliseconds
-        private static int heartbeatTimeout = 3000;
         // Thread-safe list of connected clients
         private static ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
         public static void RecieveFile()
