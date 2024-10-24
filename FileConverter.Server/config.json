@@ -1,0 +1,7 @@
+{
+  "ApplicationSettings": {
+    "DownloadFolder": "/home/amukundane/Documents/DownloadedTSVs/",
+    "Port": 1235,
+    "HeartBeatTimeout": 25000
+  }
+}
