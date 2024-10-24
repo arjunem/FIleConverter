@@ -1,0 +1,8 @@
+{
+  "ApplicationSettings": {
+    "FolderToWatch": "D:\\Learn\\FIleConverter\\Files",
+    "ServerIP": "127.0.0.1",
+    "Port": 1234,
+    "HeartBeatTimeout": 25000
+  }
+}

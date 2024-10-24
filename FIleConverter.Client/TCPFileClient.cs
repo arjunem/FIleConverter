@@ -8,12 +8,14 @@ namespace FileConverter.Client
         private const string serverIP = "127.0.0.1"; // Replace with the IP address of the Linux VM
         private const int serverPort = 1234; // Port of the TCP server
         private static bool isServerRunning = true;
-        public static void ReadHeartBeat()
+        private const int heartbeatTimeout = 25000;
+
+        public static void ReadHeartBeat(string? guestIP = null, int? port = null, int? timeout = null)
         {
             try
             {
                 // Connect to the server
-                TcpClient client = new TcpClient(serverIP, serverPort);
+                TcpClient client = new TcpClient(guestIP ?? serverIP, port ?? serverPort);
                 NetworkStream stream = client.GetStream();
                 stream.ReadTimeout = 10000; // Set a 10-second timeout for reading
                 Console.WriteLine("Connected to server.");
@@ -37,8 +39,9 @@ namespace FileConverter.Client
             }
         }
 
-        public static void SendFile(string fullpath = null, string? guestIP = null, int? port = null)
+        public static bool SendFile(string fullpath = null, string? guestIP = null, int? port = null)
         {
+            bool isSend = false;
             try
             {
                 if (isServerRunning)
@@ -75,12 +78,26 @@ namespace FileConverter.Client
                     // Close the stream and the client
                     stream.Close();
                     client.Close();
+                    isSend = true;
                 }
+            }
+            catch(ArgumentNullException ex)
+            {
+                throw ex;
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw ex;
+            }
+            catch (SocketException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
+            return isSend;
         }
 
         private static void ReceiveHeartbeat(NetworkStream stream)
@@ -93,7 +110,7 @@ namespace FileConverter.Client
                 try
                 {
                     // Start reading from the stream
-                    bytesRead = ReadWithTimeout(stream, buffer, 25000); // 25 seconds timeout
+                    bytesRead = ReadWithTimeout(stream, buffer, heartbeatTimeout); // 25 seconds timeout
 
                     // Read data from the server
                     bytesRead = stream.Read(buffer, 0, buffer.Length);
