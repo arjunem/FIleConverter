@@ -56,7 +56,7 @@ namespace FileConverter.Client
 
             Console.WriteLine($"Monitoring folder: {folderToWatch}. Press 'q' to quit.");
 
-            TCPFileClient.ReadHeartBeat(serverIp, port);
+            TCPFileClient.ReadHeartBeat(serverIp, port,config.ApplicationSettings.HeartBeatTimeout);
 
             // Keep the console app running until the user quits
             while (Console.Read() != 'q') ;

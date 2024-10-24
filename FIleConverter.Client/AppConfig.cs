@@ -10,5 +10,6 @@
         public string FolderToWatch { get; set; }
         public string ServerIP { get; set; }
         public int Port { get; set; }
+        public int HeartBeatTimeout { get; set; }
     }
 }

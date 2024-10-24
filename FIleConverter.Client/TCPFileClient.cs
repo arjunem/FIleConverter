@@ -8,7 +8,9 @@ namespace FileConverter.Client
         private const string serverIP = "127.0.0.1"; // Replace with the IP address of the Linux VM
         private const int serverPort = 1234; // Port of the TCP server
         private static bool isServerRunning = true;
-        public static void ReadHeartBeat(string? guestIP = null, int? port = null)
+        private const int heartbeatTimeout = 25000;
+
+        public static void ReadHeartBeat(string? guestIP = null, int? port = null, int? timeout = null)
         {
             try
             {
@@ -108,7 +110,7 @@ namespace FileConverter.Client
                 try
                 {
                     // Start reading from the stream
-                    bytesRead = ReadWithTimeout(stream, buffer, 25000); // 25 seconds timeout
+                    bytesRead = ReadWithTimeout(stream, buffer, heartbeatTimeout); // 25 seconds timeout
 
                     // Read data from the server
                     bytesRead = stream.Read(buffer, 0, buffer.Length);
