@@ -1,4 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿using FIleConverter.Server;
+using Newtonsoft.Json;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -6,15 +8,27 @@ namespace FileConverter.Server
 {
     class TCPFileServer
     {
-        private const int port = 1235; // Port to listen on
-        private const string saveFilePath = "/home/amukundane/Documents/received_file.txt"; // Update to your desired path
+        private static int port = 1235; // Port to listen on
         private static bool keepRunning = true;
+        private static string downloadLocation = "/home/amukundane/Documents/DownloadedTSVs/";
         // Thread-safe list of connected clients
         private static ConcurrentBag<TcpClient> clients = new ConcurrentBag<TcpClient>();
         public static void RecieveFile()
         {
             try
             {
+                // Define the path to your config.json file
+                string configFilePath = Path.Combine(AppContext.BaseDirectory, "config.json");
+
+                // Read the content of the config.json file
+                string json = File.ReadAllText(configFilePath);
+
+                // Deserialize the JSON content into C# objects
+                var config = JsonConvert.DeserializeObject<AppConfig>(json);
+
+                port = config.ApplicationSettings.Port;
+                downloadLocation = config.ApplicationSettings.DownloadFolder;
+
                 TcpListener listener = new TcpListener(IPAddress.Any, port);
                 listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 listener.Start();
@@ -86,7 +100,7 @@ namespace FileConverter.Server
                 }
 
                 // Save the file with the received file name
-                string savePath = Path.Combine("/home/amukundane/Documents/DownloadedTSVs/", fileName);  // Change the directory as needed
+                string savePath = Path.Combine(downloadLocation, fileName);  // Change the directory as needed
                 File.WriteAllBytes(savePath, fileData);
                 Console.WriteLine("File received and saved to: " + savePath);
 
